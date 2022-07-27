@@ -77,7 +77,6 @@ myGameSetUp()
 -- Use this function to poll input, run game logic, and move sprites.
 
 function playdate.update()
-
     -- Poll the d-pad and move our player accordingly.
     -- (There are multiple ways to read the d-pad; this is the simplest.)
     -- Note that it is possible for more than one of these directions
@@ -94,6 +93,10 @@ function playdate.update()
     end
     if playdate.buttonIsPressed( playdate.kButtonLeft ) then
         playerSprite:moveBy( -2, 0 )
+    end
+    if not playdate.isCrankDocked() then
+        local crankDelta, _ = playdate:getCrankChange()
+        playerSprite:setRotation(playerSprite:getRotation() + crankDelta)
     end
 
     -- Call the functions below in playdate.update() to draw sprites and keep
