@@ -3,17 +3,30 @@
     "tasks": [
         {
             "label": "Build_Rock_It_Man",
-            
             "type": "shell",
-            "command": "D:\\Downloads\\PlayDate\\PlaydateSDK\\bin\\pdc.exe Rock_It_Man_Source Rock_It_Man.pdx",
+            "command": "pdc source Rock_It_Man.pdx",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "presentation": {
-                "reveal": "silent",
+                "reveal": "always",
                 "revealProblems": "onProblem",
                 "close": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build_Rock_It_Man (verbose)",
+            "type": "shell",
+            "command": "pdc source Rock_It_Man.pdx",
+            "group": {
+                "kind": "build",
+            },
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "always",
+                "close": false
             },
             "problemMatcher": []
         }

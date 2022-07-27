@@ -1,5 +1,3 @@
-
-
 -- Name this file `main.lua`. Your game can use multiple source files if you wish
 -- (use the `import "myFilename"` command), but the simplest games can be written
 -- with just `main.lua`.
@@ -18,6 +16,15 @@ import "CoreLibs/timer"
 
 local gfx <const> = playdate.graphics
 
+local ASSET_DIR <const> = "assets"
+local IMG_DIR <const> = ASSET_DIR .. "/images"
+
+--- Loads an image from the images directory
+--- @type fun( relativePath:string)
+function LoadImage(relativePath)
+    return gfx.image.new(IMG_DIR .. "/" .. relativePath)
+end
+
 -- Here's our player sprite declaration. We'll scope it to this file because
 -- several functions need to access it.
 
@@ -25,13 +32,12 @@ local playerSprite = nil
 
 -- A function to set up our game environment.
 
-function myGameSetUp()
-
+local function myGameSetUp()
     -- Set up the player sprite.
     -- The :setCenter() call specifies that the sprite will be anchored at its center.
     -- The :moveTo() call moves our sprite to the center of the display.
 
-    local playerImage = gfx.image.new("assets/images/derp_lander")
+    local playerImage = LoadImage("derp_lander")
     assert( playerImage ) -- make sure the image was where we thought
 
     playerSprite = gfx.sprite.new( playerImage )
@@ -45,7 +51,7 @@ function myGameSetUp()
     --       and call :setZIndex() with some low number so the background stays behind
     --       your other sprites.
 
-    local backgroundImage = gfx.image.new( "assets/images/background" )
+    local backgroundImage = LoadImage("background")
     assert( backgroundImage )
 
     gfx.sprite.setBackgroundDrawingCallback(
