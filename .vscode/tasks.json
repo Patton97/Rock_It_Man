@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build_Rock_It_Man",
+            
+            "type": "shell",
+            "command": "D:\\Downloads\\PlayDate\\PlaydateSDK\\bin\\pdc.exe Rock_It_Man_Source Rock_It_Man.pdx",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

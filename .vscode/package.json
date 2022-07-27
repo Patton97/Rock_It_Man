@@ -1,0 +1,11 @@
+{
+  "name": "my",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+      "Build_Rock_It_Man": "cmd ./build.ps1"
+  },
+  "dependencies": {
+      "myfs": "^1.0.22"
+  }
+}
