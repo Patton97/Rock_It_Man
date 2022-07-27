@@ -1,4 +1,4 @@
-name=b360
+name=Rock_It_Man
 author=AndrewPattonDev
 description=When all you have is a ton of bricks, everything looks like a paddle.
 bundleID=dev.andrewpatton.rock_it_man
@@ -8,4 +8,4 @@ imagePath=assets/images
 launchSoundPath=assets/sounds
 contentWarning=This is the content warning for Rock_It_Man
 pdxversion=11200
-buildtime=712278138
+buildtime=712278408
