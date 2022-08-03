@@ -24,8 +24,16 @@ function Player:update()
 
     local currentX, currentY = self.sprite:getPosition()
     local newPos = Vector2(currentX + delta.x, currentY + delta.y)
-
-    ClampVector2(newPos, CONSTANTS.SCREEN_TOP_LEFT, CONSTANTS.SCREEN_BOTTOM_RIGHT)
+    local currentWidth, currentHeight = self.sprite:getSize()
+    local topLeft = Vector2(
+        CONSTANTS.SCREEN_TOP_LEFT.x + currentWidth / 2,
+        CONSTANTS.SCREEN_TOP_LEFT.y + currentHeight / 2
+    )
+    local bottomRight = Vector2(
+        CONSTANTS.SCREEN_BOTTOM_RIGHT.x - currentWidth / 2,
+        CONSTANTS.SCREEN_BOTTOM_RIGHT.y - currentHeight / 2
+    )
+    ClampVector2(newPos, topLeft, bottomRight)
 
     self.sprite:moveTo(newPos.x, newPos.y)
 end
