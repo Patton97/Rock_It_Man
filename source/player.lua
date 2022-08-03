@@ -2,7 +2,7 @@ import("constants")
 import("utils")
 import("vector2")
 
-class('Player', {sprite = nil, isEngineOn = false}).extends(Object)
+class('Player', {sprite = nil, isEngineOn = false, enginePower = 2, velocity = Vector2(0,0)}).extends(Object)
 function Player:init()
     Player.super.init()
     self.sprite = MakeSprite("lander")
@@ -14,16 +14,27 @@ function Player:onStart()
     self.sprite:add()
 end
 
-function Player:update()
-    local delta = Vector2(0,0)
+--- Updates the player object
+--- @type fun(deltaTime:number)
+function Player:update(deltaTime)
     if (self.isEngineOn) then
-        delta.y = delta.y - 1
-    else
-        delta.y = delta.y + 1
+        self.velocity.y = self.velocity.y - self.enginePower * deltaTime
+    end
+
+    local rotationInRad = math.rad(self.sprite:getRotation())
+    self.velocity = Vector2(
+        self.velocity.x * math.cos(rotationInRad) - self.velocity.y * math.sin(rotationInRad),
+        self.velocity.y * math.cos(rotationInRad) - self.velocity.x * math.sin(rotationInRad)
+    )
+
+    self.velocity.y = self.velocity.y + CONSTANTS.GRAVITY * deltaTime
+
+    if (self.velocity.y > CONSTANTS.GRAVITY) then
+        self.velocity.y = CONSTANTS.GRAVITY
     end
 
     local currentX, currentY = self.sprite:getPosition()
-    local newPos = Vector2(currentX + delta.x, currentY + delta.y)
+    local newPos = Vector2(currentX + self.velocity.x, currentY + self.velocity.y)
     local currentWidth, currentHeight = self.sprite:getSize()
     local topLeft = Vector2(
         CONSTANTS.SCREEN_TOP_LEFT.x + currentWidth / 2,
@@ -34,6 +45,10 @@ function Player:update()
         CONSTANTS.SCREEN_BOTTOM_RIGHT.y - currentHeight / 2
     )
     ClampVector2(newPos, topLeft, bottomRight)
+
+    -- if (newPos.y == bottomRight.y) then
+    --     self.velocity.x = 0
+    -- end
 
     self.sprite:moveTo(newPos.x, newPos.y)
 end

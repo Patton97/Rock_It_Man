@@ -14,7 +14,9 @@ end
 gameStart()
 
 function playdate.update()
-    player:update()
+    local deltaTime = playdate.getElapsedTime()
+    player:update(deltaTime)
     gfx.sprite.update()
     playdate.timer.updateTimers()
+    playdate.resetElapsedTime()
 end
