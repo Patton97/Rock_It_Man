@@ -1,5 +1,4 @@
 class('Vector2', {x = 0, y = 0}).extends(Object)
-
 function Vector2:init(x, y)
   Vector2.super.init(self)
   self.x = x
