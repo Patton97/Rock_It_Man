@@ -16,3 +16,8 @@ function MakeSprite(relativePath)
     return gfx.sprite.new(img)
 end
 
+function Clamp(number, min, max)
+    if (number < min) then return min end
+    if (number > max) then return min end
+    return number
+end

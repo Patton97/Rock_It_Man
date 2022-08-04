@@ -1,8 +1,18 @@
+import("CoreLibs/math")
 import("constants")
 import("utils")
 import("vector2")
 
-class('Player', {sprite = nil, isEngineOn = false, enginePower = 2, velocity = Vector2(0,0)}).extends(Object)
+local MAX_THRUST <const> = 0.25
+
+class('Player', {
+    sprite = nil,
+    isEngineOn = false,
+    thrust = 0,
+    velocity = Vector2(0,0),
+    rotationalVelocity = 0
+}).extends(Object)
+
 function Player:init()
     Player.super.init()
     self.sprite = MakeSprite("lander")
@@ -17,20 +27,28 @@ end
 --- Updates the player object
 --- @type fun(deltaTime:number)
 function Player:update(deltaTime)
-    if (self.isEngineOn) then
-        self.velocity.y = self.velocity.y - self.enginePower * deltaTime
-    end
-
     local rotationInRad = math.rad(self.sprite:getRotation())
-    self.velocity = Vector2(
-        self.velocity.x * math.cos(rotationInRad) - self.velocity.y * math.sin(rotationInRad),
-        self.velocity.y * math.cos(rotationInRad) - self.velocity.x * math.sin(rotationInRad)
-    )
+
+    if (self.isEngineOn) then
+        self.thrust = Clamp(self.thrust + deltaTime, 0, MAX_THRUST)
+        self.velocity.x = self.velocity.x + self.thrust * math.sin(rotationInRad)
+        self.velocity.y = self.velocity.y - self.thrust * math.cos(rotationInRad)
+    else
+        self.thrust = 0
+    end
 
     self.velocity.y = self.velocity.y + CONSTANTS.GRAVITY * deltaTime
 
     if (self.velocity.y > CONSTANTS.GRAVITY) then
         self.velocity.y = CONSTANTS.GRAVITY
+    end
+    
+    if (self.velocity.x > 0) then
+        self.velocity.x = self.velocity.x - deltaTime
+        self.velocity.x = Clamp(self.velocity.x, 0, self.velocity.x)
+    elseif (self.velocity.x < 0) then
+        self.velocity.x = self.velocity.x + deltaTime
+        self.velocity.x = Clamp(self.velocity.x, self.velocity.x, 0)
     end
 
     local currentX, currentY = self.sprite:getPosition()
@@ -45,10 +63,6 @@ function Player:update(deltaTime)
         CONSTANTS.SCREEN_BOTTOM_RIGHT.y - currentHeight / 2
     )
     ClampVector2(newPos, topLeft, bottomRight)
-
-    -- if (newPos.y == bottomRight.y) then
-    --     self.velocity.x = 0
-    -- end
 
     self.sprite:moveTo(newPos.x, newPos.y)
 end
