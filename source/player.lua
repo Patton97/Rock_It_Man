@@ -15,7 +15,7 @@ class('Player', {
 
 function Player:init()
     Player.super.init()
-    self.sprite = MakeSprite("lander")
+    self.sprite = MakeSprite("landers\\active")
     self:enableInputHandlers()
 end
 
@@ -38,10 +38,6 @@ function Player:update(deltaTime)
     end
 
     self.velocity.y = self.velocity.y + CONSTANTS.GRAVITY * deltaTime
-
-    if (self.velocity.y > CONSTANTS.GRAVITY) then
-        self.velocity.y = CONSTANTS.GRAVITY
-    end
     
     if (self.velocity.x > 0) then
         self.velocity.x = self.velocity.x - deltaTime
