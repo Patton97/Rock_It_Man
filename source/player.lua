@@ -15,7 +15,7 @@ class('Player', {
 
 function Player:init()
     Player.super.init()
-    self.sprite = MakeSprite("landers\\active")
+    self.sprite = MakeSprite("landers/active")
     self:enableInputHandlers()
 end
 
