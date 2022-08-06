@@ -15,18 +15,16 @@ class('Player', {
 
 function Player:init()
     Player.super.init()
-    self.sprite = MakeSprite("landers/active")
+    self.sprite = MakeSprite("landers/hull_window_lander/main")
     self:enableInputHandlers()
 end
 
 function Player:onStart()
-    self.sprite:moveTo(CONSTANTS.SCREEN_MID_X, CONSTANTS.SCREEN_MID_X)
+    self.sprite:moveTo(CONSTANTS.SCREEN_MID_X, CONSTANTS.SCREEN_MID_Y)
     self.sprite:add()
 end
 
---- Updates the player object
---- @type fun(deltaTime:number)
-function Player:update(deltaTime)
+local function updateVelocity(self, deltaTime)
     local rotationInRad = math.rad(self.sprite:getRotation())
 
     if (self.isEngineOn) then
@@ -48,6 +46,16 @@ function Player:update(deltaTime)
     end
 
     local currentX, currentY = self.sprite:getPosition()
+    if (currentY >= CONSTANTS.SCREEN_BOTTOM_RIGHT.y) then
+        self.velocity.y = 0
+    end
+end
+
+--- Updates the position of the provided player object
+--- @diagnostic disable-next-line: undefined-doc-name
+--- @type fun(self:Player)
+local function updatePosition(self)
+    local currentX, currentY = self.sprite:getPosition()
     local newPos = Vector2(currentX + self.velocity.x, currentY + self.velocity.y)
     local currentWidth, currentHeight = self.sprite:getSize()
     local topLeft = Vector2(
@@ -61,6 +69,24 @@ function Player:update(deltaTime)
     ClampVector2(newPos, topLeft, bottomRight)
 
     self.sprite:moveTo(newPos.x, newPos.y)
+end
+
+--- Updates the rotation of the provided player object
+--- @diagnostic disable-next-line: undefined-doc-name
+--- @type fun(self:Player)
+local function updateRotation(self)
+    local crankPos = math.floor(playdate.getCrankPosition())
+    if crankPos >= 360 then crankPos = 0 end
+    print ("crankPos: " .. crankPos)
+    self.sprite:setRotation(crankPos)
+end
+
+--- Updates the player object
+--- @type fun(deltaTime:number)
+function Player:update(deltaTime)
+    updateVelocity(self, deltaTime)
+    updateRotation(self)
+    updatePosition(self)
 end
 
 function Player:turnEngineOn()
@@ -78,8 +104,8 @@ function Player:enableInputHandlers()
         AButtonUp = function()
             self:turnEngineOff()
         end,
-        cranked = function(change, acceleratedChange)
-            self.sprite:setRotation(self.sprite:getRotation() + change)
+        leftButtonDown = function()
+            
         end,
     }
     playdate.inputHandlers.push(self.inputHandlers)
